@@ -13,8 +13,8 @@ from typing import Annotated
 from pydub import AudioSegment
 import redis
 import uuid
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 key = os.getenv("OPENAI_API_KEY")
