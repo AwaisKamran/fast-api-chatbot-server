@@ -115,6 +115,10 @@ def get_mac_address():
     mac = ':'.join(mac_num[i : i + 2] for i in range(0, 11, 2))
     return mac
 
+def delete_threads(thread_id):
+    response = client.beta.threads.delete(thread_id)
+    return response["deleted"]
+
 @app.post("/clearCache/", tags=["clearCache"])
 async def clear_cache():
     try:
@@ -125,9 +129,16 @@ async def clear_cache():
     print("Pinging Redis...")
     if redis_client.ping():
         print("Successfully connected with Redis!")
+    
+    # Delete all threads (value stored against for mac address keys) 
+    keys = redis_client.keys()
+    for key in keys:
+        value = redis_client.get(key)
+        if delete_threads(value):
+            redis_client.delete(key)
 
-    redis_client.flushdb()
-    return { 'statusCode': 200, "content": "Successfully Cache Cleared." }
+    #redis_client.flushdb()
+    return { 'statusCode': 200, "status": True }
 
 @app.post("/queryAssistant/", tags=["queryAssistant"])
 async def query_text(userPrompt: UserPromt):
