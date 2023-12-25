@@ -134,7 +134,15 @@ async def clear_cache():
     keys = redis_client.keys()
     for key in keys:
         value = redis_client.get(key)
-        if delete_threads(value):
+
+        # Important - The OpenAI API always returns and error
+        # upon retrieving and deleting a thread. 
+        try:
+            response = delete_threads(value)
+        except Exception as e: 
+            print("Exception - {e}")
+
+        if response: 
             redis_client.delete(key)
 
     #redis_client.flushdb()
