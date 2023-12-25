@@ -142,8 +142,8 @@ async def clear_cache():
         except Exception as e: 
             print("Exception - {e}")
 
-        if response: 
-            redis_client.delete(key)
+        #if response: 
+        redis_client.delete(key)
 
     #redis_client.flushdb()
     return { 'statusCode': 200, "status": True }
